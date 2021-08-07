@@ -2,7 +2,7 @@
 
 A simple URL shortener API service.
 
-## Creating a shortened link
+## Claiming a shortened link
 
 ## Releasing a shortened link
 

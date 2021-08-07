@@ -1,0 +1,65 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rspec
+  - rubocop-rails
+AllCops:
+  TargetRubyVersion: 2.7
+  Include:
+    - Rakefile
+    - app/**/*.rb
+    - spec/**/*.rb
+    - lib/**/*.rb
+  Exclude:
+    - app/assets/**/*
+    - app/javascript/**/*
+    - db/**/*
+    - config/**/*
+    - script/**/*
+    - bin/**/*
+    - node_modules/**/*
+    - tmp/**/*
+    - vendor/**/*
+LineLength:
+  Enabled: true
+  Max: 150
+Documentation:
+  Enabled: false
+ParameterAlignment:
+  Enabled: false
+MethodLength:
+  Max: 30
+AndOr:
+  Enabled: false
+ClassLength:
+  Max: 200
+ClassAndModuleChildren:
+  Enabled: false
+MultilineOperationIndentation:
+  Enabled: false
+Metrics/AbcSize:
+  Max: 20
+Naming/MethodName:
+  Exclude:
+    - app/serializers/**/*
+FormatStringToken:
+  EnforcedStyle: template
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%r': '{}'
+    '%w': '()'
+    '%W': '()'
+    '%i': '()'
+    '%I': '()'
+Rails:
+  Enabled: true
+Rails/ApplicationJob:
+  Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+RSpec/DescribeClass:
+  Exclude:
+    - spec/requests/**/*
+    - spec/views/**/*
