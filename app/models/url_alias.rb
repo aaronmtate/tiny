@@ -8,20 +8,44 @@
 #
 # - Using SecureRandom.alphanumeric(7) mimics the pattern of shortening alias provided by bitly.
 #
+# - Duplicate URL values can exist with different aliases, in case a different tracking group is desired for the same destination.
+#
 class UrlAlias < ApplicationRecord
   validates :alias, presence: true
-  validates :url, presence: true
+  validates :url, url: true, presence: true
+  validate :unclaimed_alias, on: :create
+
+  before_validate :clean_values
 
   scope :active, -> { where(released_at: nil) }
+  scope :latest, -> { order(created_at: :desc) }
 
   def release
-    return if released_at.blank?
+    return true if released_at.present?
 
-    self.update(released_at: Time.zone.now)
+    update(released_at: Time.zone.now)
+  end
+
+  def self.latest_alias(alias_text)
+    # If an alias has already been released, and no new mapping exists with the same alias, just use the old one so that it doesn't break.
+    base_rel = where(alias: alias_text)
+    base_rel.active.first || base_rel.latest.first
   end
 
   def self.rando_alias
     SecureRandom.alphanumeric(7)
+  end
+
+  private
+
+  def unclaimed_alias
+    errors.add(:base, 'At least one category must be selected to create an account') \
+      if self.class.active.find_by(alias: self.alias).present?
+  end
+
+  def clean_alias
+    self.alias = self.alias.gsub(/[0-9a-z]+/i, '').presence || rando_alias
+    self.url = url.squish
   end
 end
 
@@ -40,6 +64,5 @@ end
 #
 #  index_url_aliases_on_alias              (alias)
 #  index_url_aliases_on_uniq_active_alias  (alias) UNIQUE WHERE released_at IS NULL
-#  index_url_aliases_on_uniq_active_url    (url) UNIQUE WHERE released_at IS NULL
 #  index_url_aliases_on_url                (url)
 #

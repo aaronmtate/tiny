@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 2021_08_07_042949) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["alias"], name: "index_url_aliases_on_alias"
     t.index ["alias"], name: "index_url_aliases_on_uniq_active_alias", unique: true, where: "released_at IS NULL"
-    t.index ["url"], name: "index_url_aliases_on_uniq_active_url", unique: true, where: "released_at IS NULL"
     t.index ["url"], name: "index_url_aliases_on_url"
   end
 

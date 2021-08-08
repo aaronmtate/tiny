@@ -38,6 +38,5 @@ end
 #
 #  index_url_aliases_on_alias              (alias)
 #  index_url_aliases_on_uniq_active_alias  (alias) UNIQUE WHERE released_at IS NULL
-#  index_url_aliases_on_uniq_active_url    (url) UNIQUE WHERE released_at IS NULL
 #  index_url_aliases_on_url                (url)
 #

@@ -9,6 +9,5 @@ class CreateUrlAliases < ActiveRecord::Migration[6.1]
     end
 
     add_index :url_aliases, :alias, name: 'index_url_aliases_on_uniq_active_alias', unique: true, where: 'released_at IS NULL'
-    add_index :url_aliases, :url, name: 'index_url_aliases_on_uniq_active_url', unique: true, where: 'released_at IS NULL'
   end
 end
