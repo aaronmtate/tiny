@@ -15,7 +15,7 @@ class UrlAlias < ApplicationRecord
   validates :url, url: true, presence: true
   validate :unclaimed_alias, on: :create
 
-  before_validate :clean_values
+  before_validation :clean_values
 
   scope :active, -> { where(released_at: nil) }
   scope :latest, -> { order(created_at: :desc) }
@@ -39,12 +39,12 @@ class UrlAlias < ApplicationRecord
   private
 
   def unclaimed_alias
-    errors.add(:base, 'At least one category must be selected to create an account') \
+    errors.add(:base, 'Alias already claimed') \
       if self.class.active.find_by(alias: self.alias).present?
   end
 
-  def clean_alias
-    self.alias = self.alias.gsub(/[0-9a-z]+/i, '').presence || rando_alias
+  def clean_values
+    self.alias = self.alias&.gsub(/[^0-9a-z]+/i, '')&.presence || self.class.rando_alias
     self.url = url.squish
   end
 end

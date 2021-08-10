@@ -15,8 +15,8 @@ class UrlAliasesController < ApplicationController
     render json: { errors: "No URL found with alias \"#{params[:alias]}\"" }, status: :not_found
   end
 
-  def claim
-    url_alias = UrlAlias.new(params[:url], params[:alias])
+  def create
+    url_alias = UrlAlias.new(url: params[:url], alias: params[:alias])
     if url_alias.save
       render json: { message: "URL Alias \"#{url_alias.alias}\" claimed." }, status: :ok
     else
@@ -24,7 +24,7 @@ class UrlAliasesController < ApplicationController
     end
   end
 
-  def release
+  def destroy
     url_alias = UrlAlias.active.find_by(alias: params[:alias])
     render json: { errors: "No active alias \"#{params[:alias]}\" to be released." }, status: :not_found and return if url_alias.blank?
 
@@ -38,7 +38,7 @@ class UrlAliasesController < ApplicationController
   private
 
   def clean_params
-    params[:alias] = params[:alias].gsub(/[0-9a-z]+/i, '') if params[:alias].present?
+    params[:alias] = params[:alias].gsub(/[^0-9a-z]+/i, '') if params[:alias].present?
     params[:url] = params[:url].squish if params[:url].present?
   end
 end
